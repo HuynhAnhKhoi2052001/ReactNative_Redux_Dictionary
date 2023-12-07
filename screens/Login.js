@@ -23,14 +23,12 @@ const Login = () => {
       (item) => item.username === username && item.password === password
     );
 
-    if (account) 
-    {
-        dispatch(set(account))
-        navigation.navigate('Home')
-    }
-    else alert("failed");
+    if (account) {
+      dispatch(set(account));
+      navigation.navigate("Home");
+    } else alert("failed");
   };
-  
+
   return (
     <View>
       <Text>Login</Text>
@@ -49,7 +47,7 @@ const Login = () => {
           onChangeText={(text) => {
             setUsername(text);
           }}
-          style={{ width: "60%",height:50, borderWidth: 1 }}
+          style={{ width: "60%", height: 50, borderWidth: 1 }}
         />
       </View>
       <View
@@ -68,7 +66,7 @@ const Login = () => {
           onChangeText={(text) => {
             setPassword(text);
           }}
-          style={{ width: "60%",height:50, borderWidth: 1}}
+          style={{ width: "60%", height: 50, borderWidth: 1 }}
         />
       </View>
       <View

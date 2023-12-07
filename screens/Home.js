@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { set, add } from "../redux/action";
@@ -9,6 +9,8 @@ const Home = () => {
   const [english, setEnglish] = useState("");
   const [vietnamese, setVietnamese] = useState("");
   const dispatch = useDispatch();
+  const[data,setData]=useState(store.getState().dictionary)
+  console.log(data);
   //handle add
   const handleAdd = () => {
     const payload = {
@@ -16,13 +18,10 @@ const Home = () => {
       vietnamese: { vietnamese: vietnamese },
     };
     dispatch(add(payload));
+    handlePut(store.getState().dictionary);
+    setData(store.getState().dictionary)
   };
-  store.subscribe(() => {
-    const user = store.getState().dictionary;
-    handlePut(user)
-  
-  });
-  const handlePut= (user)=>{
+  const handlePut = (user) => {
     fetch(`https://6565a856eb8bb4b70ef20ec3.mockapi.io/user/${user.id}`, {
       method: "PUT",
       headers: { "Content-type": "application/json" },
@@ -30,8 +29,14 @@ const Home = () => {
         english: user.english,
         vietnamese: user.vietnamese,
       }),
-    }).then(respone=>respone.json()).then(console.log("put thanh cong"));
-  }
+    })
+      .then((respone) => respone.json())
+      .then(() => {
+        setEnglish("");
+        setVietnamese("");
+      });
+  };
+
   return (
     <View>
       <Text>Dictionary</Text>
@@ -80,6 +85,18 @@ const Home = () => {
         }}
       >
         <Button title="ADD" onPress={handleAdd}></Button>
+      </View>
+      <View style={{height:'50%'}}>
+        <FlatList
+        data={data.english}
+        renderItem={({item,index})=>(
+          <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+            <Text style={{width:'45%',paddingLeft:'20%'}}>{item.english ||item.EN}</Text>
+            <Text style={{width:'10%'}}>:</Text>
+            <Text style={{width:'45%'}}>{data.vietnamese[index].vietnamese||data.vietnamese[index].VN}</Text>
+          </View>
+        )}>
+        </FlatList>
       </View>
     </View>
   );
